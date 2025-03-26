@@ -1,0 +1,4 @@
+Dataset_1;Next_fit;11;0.00246ms
+Dataset_1;First_fit;10;0.00671ms
+Dataset_1;Best_fit;10;0.00804ms
+Dataset_1;Genetic_Algorithm;10;1729.77ms;100;500;0.1;5
