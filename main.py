@@ -35,7 +35,7 @@ with open('heuristics_output.csv', 'w') as file:
 
 for dataset_name, dataset in datasets.items():
     print(f'{dataset_name = }')
-    weights, capacity = dataset
+    weights, capacity, n = dataset
     for method_name, method in methods.items():
         print(f'{method_name = }')
 

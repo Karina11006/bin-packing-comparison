@@ -15,21 +15,22 @@ def read_file(path: str) -> str:
         content: str = f.read()
     return content
 
-def parse_data(raw_data: str) -> Tuple[List[int], int]:
+def parse_data(raw_data: str) -> Tuple[List[int], int, int]:
     numbers = [int(x) for x in raw_data.split()]
     weights = numbers[2:]
     capacity = numbers[1]
-    return weights, capacity
+    n = numbers[0]
+    return weights, capacity, n
 
-def load_datasets() -> Dict[str, Tuple[List[int], int]]:
-    datasets: Dict[str, Tuple[List[int], int]] = dict() # key: dataset_name, value: (weights, capacity)
+def load_datasets() -> Dict[str, Tuple[List[int], int, int]]:
+    datasets: Dict[str, Tuple[List[int], int, int]] = dict() # key: dataset_name, value: (weights, capacity, n)
     dataset_names: List[str] = get_dataset_names()
     for dataset in dataset_names:
         file_names: List[str] = get_dataset_file_names(dataset)
         for file in file_names:
             path: str = os.path.join(DATA_FOLDER, dataset, file)
             content = read_file(path)
-            weights, capacity = parse_data(content)
-            datasets[f'{dataset}_{file}'] = (weights, capacity)
+            weights, capacity, n = parse_data(content)
+            datasets[f'{dataset}_{file}'] = (weights, capacity, n)
     return datasets
 
