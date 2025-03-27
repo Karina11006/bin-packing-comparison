@@ -11,9 +11,7 @@ MUTATION_RATE: List[float] = [0.1]
 TOURNAMENT_SIZE: List[int] = [5]
 
 params = [
-    (100, 500, 0.1, 5),   # (pop_size, generation, mutation_rate, tournament_size)
-    (100, 500, 0.1, 5),
-    (100, 500, 0.1, 5),
+    (100, 500, 0.1, 5)   # (pop_size, generation, mutation_rate, tournament_size)
 ]
 
 datasets = load_datasets()
@@ -22,14 +20,14 @@ methods = {
     'Next_fit': nextfit,
     'First_fit': first_fit,
     'Best_fit': best_fit,
-    'Genetic_Algorithm': run_genetic_algorithm
+    # 'Genetic_Algorithm': run_genetic_algorithm
 }
 
-header = f"DATASET_NAME;METHOD_NAME;BIN_NUMBER;ELAPSED_TIME;POP_SIZE;GENERATIONS;MUTATION_RATE;TOURNAMENT_SIZE\n"
+header = f"DATASET_NAME;METHOD_NAME;BIN_NUMBER;BIN_CAPACITY;N;ELAPSED_TIME_MS;POP_SIZE;GENERATIONS;MUTATION_RATE;TOURNAMENT_SIZE\n"
 with open('genetic_algorithm_output.csv', 'w') as file:
     file.write(header)
 
-header = f"DATASET_NAME;METHOD_NAME;BIN_NUMBER;ELAPSED_TIME\n"
+header = f"DATASET_NAME;METHOD_NAME;BIN_NUMBER;BIN_CAPACITY;N;ELAPSED_TIME_MS\n"
 with open('heuristics_output.csv', 'w') as file:
     file.write(header)
 
@@ -48,16 +46,16 @@ for dataset_name, dataset in datasets.items():
 
                 result_value = method_output["packages count"]  #liczba paczek
                 elapsed_time = (time.perf_counter() - start_time) * 1000  # ms
-                output = (f"{dataset_name};{method_name};{result_value};{elapsed_time:.2f};"
+                output = (f"{dataset_name};{method_name};{result_value};{capacity};{n};{elapsed_time:.2f};"
                           f"{size};{generation};{mutation};{tournament}\n")
                 print(f'{param = }')
                 with open('genetic_algorithm_output.csv', 'a') as file:
                     file.write(output)
         else:
             start_time = time.perf_counter()
-            result_value = method(dataset[0], dataset[1])
+            result_value = method(weights, capacity)
             elapsed_time = (time.perf_counter() - start_time) * 1000  # ms
-            output = f"{dataset_name};{method_name};{result_value};{elapsed_time:.5f}\n"
+            output = f"{dataset_name};{method_name};{result_value};{capacity};{n};{elapsed_time:.5f}\n"
             with open('heuristics_output.csv', 'a') as file:
                 file.write(output)
 print('Finished')
