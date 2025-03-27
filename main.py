@@ -1,54 +1,64 @@
 from heuristics import nextfit, first_fit, best_fit
-from generic_algorithm import run_generic_algorithm
+from genetic_algorithm import run_genetic_algorithm
 import time
-
-
-weight1 = [4, 8, 1, 4, 2, 1, 10, 3, 5, 6, 2, 7, 5, 4, 3, 6, 4, 2, 6, 7, 2]
-c1 = 10
+from typing import List
+from dataset_loader import load_datasets
 
 # Parametry algorytmu genetycznego
-POP_SIZE: int = 100
-GENERATIONS: int = 500
-MUTATION_RATE: float = 0.1
-TOURNAMENT_SIZE: int = 5
+POP_SIZE: List[int] = [100]
+GENERATIONS: List[int] = [500]
+MUTATION_RATE: List[float] = [0.1]
+TOURNAMENT_SIZE: List[int] = [5]
 
-datasets = {
-    'Dataset_1': (weight1, c1, POP_SIZE, GENERATIONS, MUTATION_RATE, TOURNAMENT_SIZE)
-}
+params = [
+    (100, 500, 0.1, 5),   # (pop_size, generation, mutation_rate, tournament_size)
+    (100, 500, 0.1, 5),
+    (100, 500, 0.1, 5),
+]
+
+datasets = load_datasets()
+
 methods = {
     'Next_fit': nextfit,
     'First_fit': first_fit,
     'Best_fit': best_fit,
-    'Genetic_Algorithm': run_generic_algorithm
+    'Genetic_Algorithm': run_genetic_algorithm
 }
 
+header = f"DATASET_NAME;METHOD_NAME;BIN_NUMBER;ELAPSED_TIME;POP_SIZE;GENERATIONS;MUTATION_RATE;TOURNAMENT_SIZE\n"
+with open('genetic_algorithm_output.csv', 'w') as file:
+    file.write(header)
+
+header = f"DATASET_NAME;METHOD_NAME;BIN_NUMBER;ELAPSED_TIME\n"
+with open('heuristics_output.csv', 'w') as file:
+    file.write(header)
+
 for dataset_name, dataset in datasets.items():
+    print(f'{dataset_name = }')
+    weights, capacity = dataset
     for method_name, method in methods.items():
-        start_time = time.perf_counter()
+        print(f'{method_name = }')
 
         if method_name == 'Genetic_Algorithm':
-            method_output = method(
-                bin_capacity=dataset[1],
-                items=dataset[0],
-                pop_size=dataset[2],
-                generations=dataset[3],
-                mutation_rate=dataset[4],
-                tourament_size=dataset[5]
-            )
-            result_value = method_output["packages count"]  # ekstrakt liczby paczek
+            for param in params:
+                size, generation, mutation, tournament = param
+                start_time = time.perf_counter()
+                method_output = method(bin_capacity=capacity, items=weights, pop_size=size, generations=generation,
+                                       mutation_rate=mutation, tourament_size=tournament)
+
+                result_value = method_output["packages count"]  #liczba paczek
+                elapsed_time = (time.perf_counter() - start_time) * 1000  # ms
+                output = (f"{dataset_name};{method_name};{result_value};{elapsed_time:.2f};"
+                          f"{size};{generation};{mutation};{tournament}\n")
+                print(f'{param = }')
+                with open('genetic_algorithm_output.csv', 'a') as file:
+                    file.write(output)
         else:
-            # Dla heurystyk (nextfit, first_fit, best_fit)
+            start_time = time.perf_counter()
             result_value = method(dataset[0], dataset[1])
+            elapsed_time = (time.perf_counter() - start_time) * 1000  # ms
+            output = f"{dataset_name};{method_name};{result_value};{elapsed_time:.5f}\n"
+            with open('heuristics_output.csv', 'a') as file:
+                file.write(output)
+print('Finished')
 
-        elapsed_time = (time.perf_counter() - start_time) * 1000  # ms
-
-        if method_name == 'Genetic_Algorithm':
-            output = (f"{dataset_name};{method_name};{result_value};{elapsed_time:.2f}ms;"
-                      f"{dataset[2]};{dataset[3]};{dataset[4]};{dataset[5]}\n")
-        else:
-            output = f"{dataset_name};{method_name};{result_value};{elapsed_time:.5f}ms\n"
-
-        with open('output.csv', 'a') as file:
-            file.write(output)
-
-        print(output)

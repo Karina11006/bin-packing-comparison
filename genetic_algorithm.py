@@ -37,7 +37,7 @@ def mutate(ind: List[int], mutation_rate: float, items: List[int]) -> List[int]:
     return ind
 
 
-def run_generic_algorithm(
+def run_genetic_algorithm(
     bin_capacity: int,
     items: List[int],
     pop_size: int,
