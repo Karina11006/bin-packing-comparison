@@ -1,4 +1,4 @@
-from heuristics import nextfit, first_fit, best_fit
+from heuristics import next_fit, first_fit, best_fit
 from genetic_algorithm import run_genetic_algorithm
 from dataset_loader import load_datasets
 
@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 
 methods = {
-    'Next_fit': nextfit,
+    'Next_fit': next_fit,
     'First_fit': first_fit,
     'Best_fit': best_fit,
     'Genetic_Algorithm': run_genetic_algorithm
