@@ -14,7 +14,7 @@ methods = {
 }
 
 params = [
-    (10, 5, 0.1, 5)   # (pop_size, generation, mutation_rate, tournament_size)
+    (100, 500, 0.1, 5)   # (pop_size, generation, mutation_rate, tournament_size)
 ]
 
 # output files
