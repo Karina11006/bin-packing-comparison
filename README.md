@@ -25,7 +25,7 @@ Results from algorithm runs and their analysis are stored in the `results/` dire
 The `main.py` file is the entry point for executing and comparing the different algorithms on selected datasets.
 
 ## Contributors
-- **Mariusz Dyrla** (<dyrla@student.agh.edu.pl>)
+- **Dyrla Mariusz** (<dyrla@student.agh.edu.pl>)
 - **Folwarski Konrad** (<konfolw@student.agh.edu.pl>)
 - **Kita Karol** (<kkita970@gmail.com>)
 - **Krotkiewicz Karina** (<karina.krotkiewicz@gmail.com>)
