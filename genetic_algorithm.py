@@ -2,12 +2,12 @@ import random
 from typing import List, Dict, Any
 
 
-# Tworzenie losowego osobnika (chromosomu)
+# Creation of a random individual (chromosome)
 def create_individual(items: List[int]) -> List[int]:
     return [random.randint(0, len(items) - 1) for _ in range(len(items))]
 
 
-# Obliczanie liczby pudełek potrzebnych do spakowania zgodnie z chromosomem
+# Calculating the number of bins needed to pack according to the chromosome
 def fitness(ind: List[int], items: List[int], bin_capacity: int) -> int:
     bins: Dict[int, List[int]] = {}
     for item_index, bin_index in enumerate(ind):
@@ -17,19 +17,19 @@ def fitness(ind: List[int], items: List[int], bin_capacity: int) -> int:
     return len(valid_bins) + penalty * 10  # kara za przekroczenie pojemności
 
 
-# Selekcja turniejowa
+# Tournament selection
 def tournament_selection(pop: List[List[int]], tourament_size: int, items: List[int], bin_capacity: int) -> List[int]:
     selected: List[List[int]] = random.sample(pop, tourament_size)
     return min(selected, key=lambda ind: fitness(ind, items, bin_capacity))
 
 
-# Krzyżowanie jednopunktowe
+# Single-point crossing
 def crossover(parent1: List[int], parent2: List[int]) -> List[int]:
     point: int = random.randint(1, len(parent1) - 1)
     return parent1[:point] + parent2[point:]
 
 
-# Mutacja - zmiana indeksu pudełka dla jednego elementu
+# Mutation - changing bin index for one element
 def mutate(ind: List[int], mutation_rate: float, items: List[int]) -> List[int]:
     if random.random() < mutation_rate:
         idx: int = random.randint(0, len(ind) - 1)
@@ -46,10 +46,10 @@ def run_genetic_algorithm(
     tourament_size: int
 ) -> Dict[str, Any]:
 
-    # Inicjalizacja populacji
+    # Population initialization
     population: List[List[int]] = [create_individual(items) for _ in range(pop_size)]
 
-    # Główna pętla algorytmu genetycznego
+    # Main loop
     for gen in range(generations):
         new_population: List[List[int]] = []
         for _ in range(pop_size):
@@ -60,7 +60,7 @@ def run_genetic_algorithm(
             new_population.append(child)
         population = new_population
 
-    # Najlepsze rozwiązanie po wszystkich generacjach
+    # best solutions
     best: List[int] = min(population, key=lambda ind: fitness(ind, items, bin_capacity))
 
     return {
